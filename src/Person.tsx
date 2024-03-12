@@ -4,46 +4,63 @@ type SWPerson = {
   name: string;
   eye_color: string;
   birth_year: string;
+  gender: string;
 };
 
 const Person = () => {
   /* const [name, setName] = useState(""); */
   const [person, setPerson] = useState({} as SWPerson);
+  const [personId, setPersonId] = useState(0);
 
   useEffect(() => {
-    const url = "https://swapi.py4e.com/api/people/1/";
-    const fetchLuke = async () => {
+    const url = `https://swapi.py4e.com/api/people/${personId}/`;
+    const fetchPerson = async () => {
       const result = await fetch(url);
-      const luke = await result.json();
+      const personData = await result.json();
       if (!ignore) {
         setPerson({
-          name: luke.name,
-          eye_color: luke.eye_color,
-          birth_year: luke.birth_year,
+          name: personData.name,
+          eye_color: personData.eye_color,
+          birth_year: personData.birth_year,
+          gender: personData.gender,
         });
       }
     };
     let ignore = false;
-    fetchLuke();
+    fetchPerson();
     return () => {
       ignore = true;
     };
-  }, []);
+  }, [personId]);
+
+  const randomizePerson = () => {
+    const randomId = Math.floor(Math.random() * 82) + 1;
+    setPersonId(randomId);
+  };
+
   return (
     <>
-      <h1>{person.name}</h1>
-      <ul>
-        {person ? (
-          <>
-            <li>Name: </li>
-            <li>Name: {person.name}</li>
-            <li>Eyes: {person.eye_color}</li>
-            <li>Birth year: {person.birth_year}</li>
-          </>
-        ) : (
-          <li>Loading...</li>
-        )}
-      </ul>
+      <div className="characterBox">
+        <input
+          type="number"
+          value={personId}
+          onChange={(e) => setPersonId(Number(e.target.value))}
+        />
+        <button onClick={randomizePerson}>Randomize</button>
+        <h1>{person.name}</h1>
+        <ul>
+          {person ? (
+            <>
+              {/* <li>Name: {person.name}</li> */}
+              <li>Eyes: {person.eye_color}</li>
+              <li>Birth year: {person.birth_year}</li>
+              <li>Gender: {person.gender}</li>
+            </>
+          ) : (
+            <li>Loading...</li>
+          )}
+        </ul>
+      </div>
     </>
   );
 };
