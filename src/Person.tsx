@@ -32,6 +32,7 @@ const Person = () => {
       ignore = true;
     };
   }, [personId]);
+  console.log(personId);
 
   const randomizePerson = () => {
     const randomId = Math.floor(Math.random() * 82) + 1;
