@@ -14,16 +14,18 @@ type NewPerson = {
   species: string[];
   vehicles: string[];
   starships: string[];
-  created: Date;
-  edited: Date;
-  url: string;
+  created: string;
 };
 
-const FirstPerson = () => {
+type FirstPersonProps = {
+  personId: number;
+};
+
+const FirstPerson: React.FC<FirstPersonProps> = ({ personId }) => {
   const [person, setPerson] = useState({} as NewPerson);
 
   useEffect(() => {
-    const url = "https://swapi.py4e.com/api/people/1/";
+    const url = `https://swapi.py4e.com/api/people/${personId}/`;
     const fetchLuke = async () => {
       const result = await fetch(url);
       const data = await result.json();
@@ -43,8 +45,6 @@ const FirstPerson = () => {
           vehicles: data.vehicles,
           starships: data.starships,
           created: data.created,
-          edited: data.edited,
-          url: data.url,
         });
       }
     };
@@ -53,21 +53,23 @@ const FirstPerson = () => {
     return () => {
       ignore = true;
     };
-  }, []);
+  }, [personId]);
 
   return (
-    <div>
+    <div className="lukeBox">
       {person ? (
         <>
-          <p>Name: {person.name}</p>
+          <h1>{person.name}</h1>
           <p>Height: {person.height}</p>
           <p>Mass: {person.mass}</p>
-          <p>Created: {person.created.toLocaleString()}</p>
+          <p>Created: {person.created}</p>
+          <p>Films appeared in: {person.films ? person.films.length : 0}</p>
           <p>Species: </p>
           <ul>
-            {person.species.map((species, index) => (
-              <li key={index}>{species}</li>
-            ))}
+            {person.species &&
+              person.species.map((species, index) => (
+                <li key={index}>{species}</li>
+              ))}
           </ul>
         </>
       ) : (

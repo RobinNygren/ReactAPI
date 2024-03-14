@@ -6,7 +6,9 @@ function App() {
   return (
     <>
       <Person />
-      <FirstPerson />
+      <FirstPerson personId={1} />
+      <FirstPerson personId={2} />
+      <FirstPerson personId={3} />
     </>
   );
 }
