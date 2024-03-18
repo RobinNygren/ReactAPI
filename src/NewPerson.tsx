@@ -17,37 +17,47 @@ type NewPerson = {
   created: string;
 };
 
-type FirstPersonProps = {
-  personId: number;
+type PersonProps = {
+  personId: number | string;
 };
 
-const FirstPerson: React.FC<FirstPersonProps> = ({ personId }) => {
-  const [person, setPerson] = useState({} as NewPerson);
+const FirstPerson: React.FC<PersonProps> = ({ personId }) => {
+  const [person, setPerson] = useState<NewPerson | null>(null);
 
   useEffect(() => {
-    const url = `https://swapi.py4e.com/api/people/${personId}/`;
+    let url = "";
+    if (typeof personId === "number") {
+      url = `https://swapi.py4e.com/api/people/${personId}/`;
+    } else if (typeof personId === "string") {
+      url = `https://swapi.py4e.com/api/people/?search=${personId}`;
+    }
     const fetchLuke = async () => {
       const result = await fetch(url);
       const data = await result.json();
       if (!ignore) {
-        setPerson({
-          name: data.name,
-          height: data.height,
-          mass: data.mass,
-          hair_color: data.hair_color,
-          skin_color: data.skin_color,
-          eye_color: data.eye_color,
-          birth_year: data.birth_year,
-          gender: data.gender,
-          homeworld: data.homeworld,
-          films: data.films,
-          species: data.species,
-          vehicles: data.vehicles,
-          starships: data.starships,
-          created: data.created,
-        });
+        if (typeof personId === "number") {
+          setPerson({
+            name: data.name,
+            height: data.height,
+            mass: data.mass,
+            hair_color: data.hair_color,
+            skin_color: data.skin_color,
+            eye_color: data.eye_color,
+            birth_year: data.birth_year,
+            gender: data.gender,
+            homeworld: data.homeworld,
+            films: data.films,
+            species: data.species,
+            vehicles: data.vehicles,
+            starships: data.starships,
+            created: data.created,
+          });
+        } else if (typeof personId === "string" && data.results.length > 0) {
+          setPerson(data.results[0]);
+        }
       }
     };
+
     let ignore = false;
     fetchLuke();
     return () => {

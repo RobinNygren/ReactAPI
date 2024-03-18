@@ -9,6 +9,9 @@ function App() {
       <FirstPerson personId={1} />
       <FirstPerson personId={2} />
       <FirstPerson personId={3} />
+      <FirstPerson personId="Skywalker" />
+      <FirstPerson personId="R2" />
+      <FirstPerson personId="vader" />
     </>
   );
 }
